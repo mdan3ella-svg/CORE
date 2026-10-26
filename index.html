@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CORE | Building Systems | Vertascan · Recovery Build 2.6.2</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CORE | Building Systems | Vertascan · Recovery Build 2.6.3</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230e1623'/%3E%3Cpath d='M45 17H25L16 32l9 15h20' fill='none' stroke='%2360e2d5' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
 <script>
 /* Load the matching version of all Three.js modules from ONE provider. */
@@ -535,7 +535,7 @@ $('tourPlay').onclick=()=>tourPlay(false);$('tourStop').onclick=tourStop;$('tour
 $('videoFormat').onchange=()=>{const f=recordingFormat();$('videoSupport').textContent=f?'Available format: '+f.ext.toUpperCase()+' ('+f.mime+')':'Selected format not supported by this browser';};$('videoFormat').onchange();
 $('tourPathExport').onclick=()=>download(new Blob([JSON.stringify({format:'CORE-CAMERA-PATH',mode:$('tourMode').value,keyframes:tourKeyframes,generated:tourPoints()},null,2)],{type:'application/json'}),'CORE_camera_path.json');
 
-initTypes();syncLevels();refreshDimList();architecture();resize();loop();demo();
+// Deferred core scene boot until all XREF and project lifecycle declarations are initialized.
 
 // CORE v2.1 CUSTOM ROUTING + EXTERNAL REFERENCES
 const xrefAssets=[];
@@ -675,5 +675,7 @@ projectShellStatus();
 // Preserve accurate reattachment metadata without representing the referenced binary as embedded.
 const originalSave=save;save=function(){const xrefManifest=xrefAssets.map(a=>({name:a.name,format:a.format,axis:a.axis,anchor:a.anchor,x:a.x,y:a.y,z:a.z,rot:a.rot,scale:a.scale,opacity:a.opacity,visible:a.visible,locked:a.locked,embedded:false}));let obj={format:'CORE-VERTASCAN',version:'2.6',cadDimensions,dimensionSerial,levels,gridSettings,activeLevel,cadLayers:Object.fromEntries(Object.entries(cadLayers).map(([name,v])=>[name,{visible:!!v.visible,color:v.color,weight:v.weight}])),cameraStudio:{keyframes:tourKeyframes,mode:$('tourMode').value,duration:Number($('tourDuration').value),eye:Number($('tourEye').value),videoFormat:$('videoFormat').value},units:'m',jurisdiction:$('jurisdiction').value,objects,savedViews,xrefManifest,enclosureModel:enclosureModel?{...enclosureModel}:null,parameters:{fittingRate:toNum('fittingRate'),wasteFactor:toNum('wasteFactor'),insulation:toNum('insulation'),ruleClearance:toNum('ruleClearance')},importedReference:importedInfo?{name:importedInfo.name,elementCount:importedInfo.elementCount,embedded:false}:null};download(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),'CORE_Building_Systems.core')};$('save').onclick=save;
 
+// Initialize after all lexical declarations, especially xrefGizmo and xrefAssets.
+initTypes();syncLevels();refreshDimList();architecture();resize();loop();demo();
 window.__coreBoot=true;document.getElementById('coreBootAlert').style.display='none';
 </script></body></html>
